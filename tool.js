@@ -11,8 +11,8 @@ document.getElementById("fileInput").addEventListener("change", function(e) {
   reader.readAsText(file);
 });
 
-// Function to extract content up to <part-list>
-function extractUpToPartList() {
+// Function to start the extraction process
+function startExtraction() {
   if (!window.xmlText) {
     alert("Please upload a valid XML file first.");
     return;
@@ -37,6 +37,9 @@ function extractUpToPartList() {
 
   // Enable the next extraction button
   document.getElementById("nextButton").style.display = "inline-block";
+
+  // Hide the start extraction button after it has been clicked
+  document.getElementById("startButton").style.display = "none";
 }
 
 // Function to extract content from <score-part id="P1"> to </score-part>
