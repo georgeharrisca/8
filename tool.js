@@ -68,8 +68,11 @@ function extractScorePart() {
   // Save the combined XML content for later
   window.extractedContent = newXmlString;
 
+  // Now, append </part-list> to close the part-list section
+  window.extractedContent += "\n</part-list>";
+
   // Display the new content (for debugging or preview)
-  document.getElementById("output").textContent = newXmlString;
+  document.getElementById("output").textContent = window.extractedContent;
 
   // Enable the next extraction button
   document.getElementById("nextPartButton").style.display = "inline-block";
