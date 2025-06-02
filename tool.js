@@ -2,7 +2,6 @@
 document.getElementById("fileInput").addEventListener("change", function(e) {
   const file = e.target.files[0];
   
-  // Check if a file was selected
   if (!file) {
     alert("Please select a file.");
     return;
@@ -10,7 +9,6 @@ document.getElementById("fileInput").addEventListener("change", function(e) {
 
   const reader = new FileReader();
 
-  // Add error handling for file reading
   reader.onerror = function() {
     alert("Error reading the file.");
   };
@@ -27,11 +25,9 @@ document.getElementById("fileInput").addEventListener("change", function(e) {
       return;
     }
 
-    // Store the raw XML text globally for future extraction
     window.xmlText = xmlText;
   };
 
-  // Read the file as text
   reader.readAsText(file);
 });
 
@@ -49,10 +45,7 @@ function startExtraction() {
     return;
   }
 
-  // Extract from the beginning of the file to just after the first appearance of <part-list>
-  const partListEndIndex = partListIndex + "<part-list>".length;
-
-  // Extract everything from the start of the file up to and including the first <part-list>
+  const partListEndIndex = window.xmlText.indexOf("</part-list>") + "</part-list>".length;
   const extractedContent = window.xmlText.slice(0, partListEndIndex);
 
   // Save the extracted content for later
@@ -66,4 +59,33 @@ function startExtraction() {
 
   // Hide the start extraction button after it has been clicked
   document.getElementById("startButton").style.display = "none";
+}
+
+// Function to extract content from <score-part id="P1"> to </score-part>
+function extractScorePart() {
+  console.log("Extract Score Part function triggered");
+
+  if (!window.xmlText) {
+    alert("Please upload a valid XML file first.");
+    return;
+  }
+
+  // Step 2: Extract everything from <score-part id="P1"> to the next </score-part>
+  const scorePartStartIndex = window.xmlText.indexOf('<score-part id="P1">');
+  if (scorePartStartIndex === -1) {
+    alert("<score-part id=\"P1\"> tag not found in the XML file.");
+    return;
+  }
+
+  const scorePartEndIndex = window.xmlText.indexOf('</score-part>', scorePartStartIndex) + '</score-part>'.length;
+  const scorePartContent = window.xmlText.slice(scorePartStartIndex, scorePartEndIndex);
+
+  // Step 3: Append the extracted score-part content and </part-list>
+  window.extractedContent += "\n" + scorePartContent + "\n</part-list>";
+
+  // Display the updated content (for debugging or preview)
+  document.getElementById("output").textContent = window.extractedContent;
+
+  // Enable the next extraction button
+  document.getElementById("nextPartButton").style.display = "inline-block";
 }
