@@ -12,9 +12,10 @@ function startExtraction() {
     return;
   }
 
-  const partListEndIndex = window.xmlText.indexOf("</part-list>") + "</part-list>".length;
+  // Extract from the beginning of the file to just after the first appearance of <part-list>
+  const partListEndIndex = partListIndex + "<part-list>".length;
 
-  // Extract from the beginning of the file to the first appearance of <part-list> (including <part-list> and </part-list>)
+  // Extract everything from the start of the file up to and including the first <part-list>
   const extractedContent = window.xmlText.slice(0, partListEndIndex);
 
   // Save the extracted content for later
