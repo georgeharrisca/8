@@ -1,3 +1,4 @@
+console.log("tool.js loaded");
 <!DOCTYPE html>
 <html lang="en">
 <head>
