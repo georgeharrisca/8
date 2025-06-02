@@ -1,140 +1,25 @@
-// Function to handle file input and read the file as text
-document.getElementById("fileInput").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  
-  if (!file) {
-    alert("Please select a file.");
-    return;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XML Extraction Tool</title>
+</head>
+<body>
+  <h1>XML Extraction Tool</h1>
+  <p>Select an XML file and follow the steps to extract data:</p>
 
-  const reader = new FileReader();
+  <!-- File input -->
+  <input type="file" id="fileInput" />
+  <br/><br/>
 
-  reader.onerror = function() {
-    alert("Error reading the file.");
-  };
+  <!-- Start Extraction Button -->
+  <button id="startButton" onclick="startExtraction()">Start Extraction</button>
 
-  reader.onload = function(event) {
-    const xmlText = event.target.result;
+  <!-- Display extracted content -->
+  <pre id="output"></pre>
 
-    // Log the file content for debugging purposes
-    console.log("File content loaded:", xmlText);
-
-    // Check if it's an XML file by verifying the first part of the content
-    if (!xmlText.startsWith('<?xml')) {
-      alert("Please upload a valid XML file.");
-      return;
-    }
-
-    window.xmlText = xmlText;
-  };
-
-  reader.readAsText(file);
-});
-
-// Function to start the extraction process
-function startExtraction() {
-  if (!window.xmlText) {
-    alert("Please upload a valid XML file first.");
-    return;
-  }
-
-  // Step 1: Extract everything from the beginning of the file up to and including <part-list>
-  const partListIndex = window.xmlText.indexOf("<part-list>");
-  if (partListIndex === -1) {
-    alert("<part-list> tag not found in the XML file.");
-    return;
-  }
-
-  // Step 1a: Extract everything up to and including the first <part-list>
-  const partListEndIndex = partListIndex + "<part-list>".length;
-  const extractedContent = window.xmlText.slice(0, partListEndIndex);
-
-  // Save the extracted content for later
-  window.extractedContent = extractedContent;
-
-  // Display the extracted content (for debugging or preview)
-  document.getElementById("output").textContent = extractedContent;
-
-  // Enable the next extraction button
-  document.getElementById("nextButton").style.display = "inline-block";
-
-  // Hide the start extraction button after it has been clicked
-  document.getElementById("startButton").style.display = "none";
-}
-
-// Function to extract content from <score-part id="P1"> to </score-part>
-function extractScorePart() {
-  console.log("Extract Score Part function triggered");
-
-  if (!window.xmlText) {
-    alert("Please upload a valid XML file first.");
-    return;
-  }
-
-  // Step 2: Extract everything from <score-part id="P1"> to the next </score-part>
-  const scorePartStartIndex = window.xmlText.indexOf('<score-part id="P1">');
-  if (scorePartStartIndex === -1) {
-    alert("<score-part id=\"P1\"> tag not found in the XML file.");
-    return;
-  }
-
-  const scorePartEndIndex = window.xmlText.indexOf('</score-part>', scorePartStartIndex) + '</score-part>'.length;
-  const scorePartContent = window.xmlText.slice(scorePartStartIndex, scorePartEndIndex);
-
-  // Step 3: Append the extracted score-part content and </part-list>
-  window.extractedContent += "\n" + scorePartContent + "\n</part-list>";
-
-  // Display the updated content (for debugging or preview)
-  document.getElementById("output").textContent = window.extractedContent;
-
-  // Enable the next extraction button
-  document.getElementById("nextPartButton").style.display = "inline-block";
-}
-
-// Function to extract content from the next <part id="P1"> to </part>
-function extractPart() {
-  if (!window.xmlText) {
-    alert("Please upload a valid XML file first.");
-    return;
-  }
-
-  // Step 4: Extract everything from the next <part id="P1"> to the next </part>
-  const partStartIndex = window.xmlText.indexOf('<part id="P1">', window.xmlText.indexOf("</part-list>"));
-  if (partStartIndex === -1) {
-    alert("<part id=\"P1\"> tag not found in the XML file.");
-    return;
-  }
-
-  const partEndIndex = window.xmlText.indexOf('</part>', partStartIndex) + '</part>'.length;
-  const partContent = window.xmlText.slice(partStartIndex, partEndIndex);
-
-  // Step 5: Append the extracted part content to the previously extracted content
-  window.extractedContent += "\n" + partContent;
-
-  // Display the new content (for debugging or preview)
-  document.getElementById("output").textContent = window.extractedContent;
-
-  // Enable the final extraction button
-  document.getElementById("finalizeButton").style.display = "inline-block";
-}
-
-// Function to add </score-partwise> at the end and finalize the XML
-function finalizeXml() {
-  if (!window.xmlText) {
-    alert("Please upload a valid XML file first.");
-    return;
-  }
-
-  // Step 6: Append </score-partwise> at the end to close the XML document
-  const finalXmlString = window.extractedContent + "\n</score-partwise>";
-
-  // Display the final content (for debugging or preview)
-  document.getElementById("output").textContent = finalXmlString;
-
-  // Create a download link for the finalized XML file
-  const blob = new Blob([finalXmlString], { type: "application/xml" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "final_extracted.xml";
-  link.click();
-}
+  <!-- Add script here at the bottom -->
+  <script src="tool.js"></script>
+</body>
+</html>
