@@ -45,10 +45,8 @@ function startExtraction() {
     return;
   }
 
-  // Extract everything from the beginning of the file to just after <part-list> (including <part-list>)
+  // Step 1a: Extract everything up to and including the first <part-list>
   const partListEndIndex = partListIndex + "<part-list>".length;
-
-  // Extract everything from the start of the file up to and including <part-list>
   const extractedContent = window.xmlText.slice(0, partListEndIndex);
 
   // Save the extracted content for later
